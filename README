@@ -1,0 +1,58 @@
+                Ralink/MediaTek U-Boot for MIPS SoC
+        RT3052/RT3352/RT3883/RT5350/MT7620/MT7621/MT7628/MT7688
+                  Based on MediaTek SDK 5.0.1.0
+
+
+                            BUILD TOOLS
+
+For MT7621 U-Boot:
+- extract 'tools/mips-2012.03.tar.bz2' to /opt
+
+For RT3XXX/MT7620/MT7628 U-Boot:
+- extract 'tools/buildroot-gcc342.tar.bz2' to /opt
+
+Both toolchains require x86 (32-bit) Linux environment.
+
+
+                         BUILD INSTRUCTIONS
+                         
+(mips-2012.03 - 32bit, to run the copiler in 64x - install ia32-libs )
+# sudo apt-get install ia32-libs
+
+- Run 'make menuconfig', choose [Exit] and confirm [Save]. This is important step!
+- Run 'make'.
+- Use image file uboot.bin (ROM mode) for NOR and SPI-flash boards.
+- Use image file uboot.img (RAM mode) for NAND-flash (or RT3XXX SPI-flash) boards 
+
+To clean U-Boot tree:
+- Run 'make clean'.
+- Run 'make unconfig'.
+
+NOTE:
+1. U-Boot images for most ASUS devices is already builded.
+2. U-Boot is configured for UART baud rate 115200.
+3. All profiles has disabled option "Enable all Ethernet PHY" to prevent LAN-WAN
+   spoofing (EPHY will be enabled later in FW logic). To force enable EPHY (e.g. for
+   use OpenWRT/PandoraBox), select option "Enable all Ethernet PHY".
+
+
+                         FLASH INSTRUCTIONS
+
+- Upload appropriate U-Boot image file to router's /tmp dir (e.g. via WinSCP).
+- Check U-Boot image checksum and compare with uboot.md5:
+
+md5sum /tmp/uboot.bin
+
+- Flash checked U-Boot via SSH or Telnet console (flash duration ~3 sec):
+
+mtd_write write /tmp/uboot.bin Bootloader
+
+- Reboot router.
+
+                             WARNING
+
+- Do not remove power supply during flash U-Boot!!!
+- Device may be bricked due to your incorrect actions!!!
+
+
+ 
